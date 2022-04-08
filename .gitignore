@@ -129,4 +129,5 @@ dmypy.json
 .pyre/
 
 # Raw Data Files
-raw-data/*
+raw-data/*.csv
+raw-data/*.txt
