@@ -68,4 +68,5 @@ def get_anomaly_score(new_entry: np.ndarray) -> float:
 
 # Generate new random entry and tests AS function
 new_entry = np.array([means[i] + random.randrange(-10, 10) for i in range(len(means))])
+print(f"Entry: {new_entry}")
 get_anomaly_score(new_entry)
