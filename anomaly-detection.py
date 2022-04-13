@@ -34,6 +34,8 @@ def get_anomaly_score(new_entry: np.ndarray) -> float:
     df = pd.read_csv(USER_EXAMPLES_FILENAME)
     training_examples = df.to_numpy()
     num_examples, num_features = training_examples.shape
+    
+    # Dump some data and do some input vetting.
     print(f"Training shape: {training_examples.shape}")
     if len(new_entry) != num_features:
         print("Error: Entry length should match the number of features.")
