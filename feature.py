@@ -1,7 +1,5 @@
 import random
-import pandas as pd
 import numpy as np
-import sys
 
 def extract_features(data: np.ndarray) -> np.ndarray:
 
@@ -55,11 +53,9 @@ VECTOR_FEATURES = 3
 NUM_SEGMENTS = 4
 
 # Generate new random entry and tests AS function
-sample_data = np.array([[[
+sample_segments = np.array([[[
     random.randrange(-10, 10)
     for _ in range(VECTOR_FEATURES)]
     for _ in range(DATA_POINTS)]
     for _ in range(NUM_SEGMENTS)]
 )
-
-print(extract_features(sample_data[0]))
