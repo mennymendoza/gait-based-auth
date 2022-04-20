@@ -1,7 +1,31 @@
 import random
 import numpy as np
+import pandas as pd
 
-def extract_features(data: np.ndarray) -> np.ndarray:
+# Constants
+
+FEATURE_NAMES = ["iqr",
+        "duration",
+        "median",
+        "mad",
+        "max",
+        "mean",
+        "min",
+        "rms",
+        "std"]
+VECTOR_DIMS = [
+    "x",
+    "y",
+    "z",
+    "m"
+]
+DATA_POINTS = 200
+VECTOR_FEATURES = 3
+NUM_SEGMENTS = 4
+
+# Functions
+
+def extract_features(data: np.ndarray):
 
     ''' Takes as input a 2D numpy array. Extracts the features of the data and outputs a gait instance.'''
 
@@ -42,20 +66,23 @@ def extract_features(data: np.ndarray) -> np.ndarray:
         min_feature,
         rms_feature,
         std_feature
-    ), axis=1)
+    ), axis=1).flatten()
 
     return features
 
+def build_training_data(user: str, data: np.ndarray) -> None:
+    gait_instances = np.array(list(map(extract_features, data)))
+    num_segments, num_features = gait_instances.shape
+    column_names = [f"{name}_{dim}" for dim in VECTOR_DIMS for name in FEATURE_NAMES]
+    df = pd.DataFrame(gait_instances, columns=column_names)
+    df.to_csv(f"training-data/{user}-training-data.csv")
+
 # Testing
 
-DATA_POINTS = 200
-VECTOR_FEATURES = 3
-NUM_SEGMENTS = 4
-
 # Generate new random entry and tests AS function
-sample_segments = np.array([[[
-    random.randrange(-10, 10)
-    for _ in range(VECTOR_FEATURES)]
-    for _ in range(DATA_POINTS)]
-    for _ in range(NUM_SEGMENTS)]
-)
+# sample_segments = np.array([[[
+#     random.randrange(-10, 10)
+#     for _ in range(VECTOR_FEATURES)]
+#     for _ in range(DATA_POINTS)]
+#     for _ in range(NUM_SEGMENTS)]
+# )
