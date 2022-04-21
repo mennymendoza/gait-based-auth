@@ -1,4 +1,3 @@
-import random
 import numpy as np
 import pandas as pd
 
@@ -19,9 +18,6 @@ VECTOR_DIMS = [
     "z",
     "m"
 ]
-DATA_POINTS = 200
-VECTOR_FEATURES = 3
-NUM_SEGMENTS = 4
 
 # Functions
 
@@ -75,14 +71,6 @@ def build_training_data(user: str, data: np.ndarray) -> None:
     num_segments, num_features = gait_instances.shape
     column_names = [f"{name}_{dim}" for dim in VECTOR_DIMS for name in FEATURE_NAMES]
     df = pd.DataFrame(gait_instances, columns=column_names)
-    df.to_csv(f"training-data/{user}-training-data.csv")
+    df.to_csv(f"training-data/{user}-training-data.csv", index=False)
 
 # Testing
-
-# Generate new random entry and tests AS function
-# sample_segments = np.array([[[
-#     random.randrange(-10, 10)
-#     for _ in range(VECTOR_FEATURES)]
-#     for _ in range(DATA_POINTS)]
-#     for _ in range(NUM_SEGMENTS)]
-# )

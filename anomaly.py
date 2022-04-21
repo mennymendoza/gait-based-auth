@@ -1,42 +1,17 @@
-import random
 import pandas as pd
 import numpy as np
 import sys
 
-USER_EXAMPLES_FILENAME = "raw-data/fake_user_features.csv"
-
-features = [
-    "AAV",
-    "AC_C1",
-    "AC_C2",
-    "AC_DP2",
-    "duration",
-    "IQR",
-    "kurtosis",
-    "MAD",
-    "max",
-    "MCR",
-    "mean",
-    "median",
-    "min",
-    "P2P",
-    "RMS",
-    "SD",
-    "skewness"
-]
-means = [70, 8, 66, 13, 93, 68, 52, 36, 58, 74, 4, 18, 9, 75, 72, 31, 90]
-
-def get_anomaly_score(new_entry: np.ndarray) -> float:
+def get_anomaly_score(new_entry: np.ndarray, filepath: str, verbose=False) -> float:
     
     ''' Gets the anomaly score (AS) of the features of a single gait instance. '''
 
     # Unpack data from csv to numpy array
-    df = pd.read_csv(USER_EXAMPLES_FILENAME)
+    df = pd.read_csv(filepath)
     training_examples = df.to_numpy()
     num_examples, num_features = training_examples.shape
     
     # Dump some data and do some input vetting.
-    print(f"Training shape: {training_examples.shape}")
     if len(new_entry) != num_features:
         print("Error: Entry length should match the number of features.")
         sys.exit()
@@ -60,13 +35,10 @@ def get_anomaly_score(new_entry: np.ndarray) -> float:
     anomaly_score = (min_dist - mean) / std_dev
     
     # Dump data
-    print(f"min-dist {min_dist} M: {mean} SD: {std_dev} AS: {anomaly_score}")
+    if verbose:
+        print(f"min-dist {min_dist} M: {mean} SD: {std_dev} AS: {anomaly_score}")
 
     return anomaly_score
 
 # Testing
 
-# Generate new random entry and tests AS function
-new_entry = np.array([means[i] + random.randrange(-10, 10) for i in range(len(means))])
-print(f"Entry: {new_entry}")
-get_anomaly_score(new_entry)
