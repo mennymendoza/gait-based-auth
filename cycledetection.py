@@ -1,31 +1,15 @@
 import math
 import numpy as np
 import pandas as pd
-from scipy.signal import argrelextrema
 from scipy import stats
-
+#Constants
+N = 100
 
 def distance(y1,y2):
     d = np.sqrt((y2-y1)**2)
     return d
-df = pd.read_csv(r'C:\Users\drpra\Desktop\research\pythons\user2pocketacc.csv')
-dfy = pd.DataFrame(df,columns = ['Yvalue'])
-dfy = dfy.to_numpy()
-dfy = np.square(dfy)
-dfy = np.sqrt(dfy)
-L = len(df.index)
-C = int(L/2)
-N = 100
-Start = C - int(N/2)
-End = C + int(N/2) - 1
-reference = dfy[Start:End]
-x = dfy[0:Start - 1]
-Lh = np.array_split(x,int(len(x)/(N-1)))
-x = dfy[End+1: L]
-Rh = np.array_split(x,int(len(x)/(N-1)))
-tarr = np.empty((L-99), float)
 
-def handler(window): #finds the euclidian distance between points at corresponding indexes and returns a list of the lowest distances
+def handler(reference,window): #finds the euclidian distance between points at corresponding indexes and returns a list of the lowest distances
     holdvals = np.empty(0,int)
     x = 0
     for i in range(0,len(window) - 1):
@@ -48,17 +32,33 @@ def minfinder(arr): #finds the mode of data from handler
     else:
         return int(temp[0])
 
-def segmentation(clen): #returns segmented data
+def segmentation(df,clen): #returns segmented data
     holder = pd.DataFrame(df,columns = ['Xvalue','Yvalue','Zvalue']).to_numpy()
     total = int(len(holder)/clen)
     na = np.array_split(holder,total)
     return na
 
-#segmented data is the list of valyes+
-z = (handler(Lh))
-z = np.append(z,handler(Rh))
-z = minfinder(z)
-segmented_data = segmentation(z)
+def cyclegenerator(file): #runs entire process
+    df = pd.read_csv(rf'raw-data/{file}.csv')
+    dfy = pd.DataFrame(df,columns = ['Yvalue']).to_numpy()
+    dfy = np.square(dfy)
+    dfy = np.sqrt(dfy)
+    L = len(df.index)
+    C = int(L/2)
+    Start = C - int(N/2)
+    End = C + int(N/2) - 1
+    reference = dfy[Start:End]
+    x = dfy[0:Start - 1]
+    Lh = np.array_split(x,int(len(x)/(N-1)))
+    x = dfy[End+1: L]
+    Rh = np.array_split(x,int(len(x)/(N-1)))
+    z = (handler(reference,Lh))
+    z = np.append(z,handler(reference,Rh))
+    z = minfinder(z)
+    return segmentation(df,z)
+
+
+
 
 
 
