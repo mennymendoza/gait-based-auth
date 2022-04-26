@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import os
 import re
-import cycledetection
 
 # Constants
 
@@ -77,18 +76,27 @@ def build_training_data(user: str, data: np.ndarray) -> None:
     df.to_csv(f"training-data/{user}-training-data.csv", index=False)
 
 def build_feature_batch() -> None:
+
+    # Grabbing the file names of every file in raw-data
     all_paths = []
     for _, _, files in os.walk("./raw-data"):
         for file in files:
             all_paths.append(file)
-    for u in USERS:
-        user_data = [path for path in all_paths if re.search(f'\A{u}', path)]
-        for f in user_data:
-            f = f[:-4]
-            print(f)
-            build_training_data(f"{f}", cycledetection.cyclegenerator(f))
     
-    # mix and match features to generate testing data.
+    # Building training data for each user.
+    for u in USERS:
+        user_data = [path for path in all_paths if re.search(f'^{u}.*\.csv$', path)]
+        for f in user_data:
+            f = f[:-4] # removes the .csv part of the file
+            print(f)
+            # build_training_data(f"{f}", cycledetection.cyclegenerator(f)) 
+            # instead, use gait_instances = np.array(list(map(extract_features, data)))
+            # get 80% of the gait_instances for testing, take 20% for training.
+            # save them both into seperate csvs, one in testing-data, and one in training-data.
+    
+    # Go into the testing directory and take all acceleration/gyroscopic data.
+    # Mix all testing data into a big dataframe (along with the name of the user)
+    # For each user, build a new data frame where THAT user is labeled true and any other user is labelled false.
 
 
 # Testing
