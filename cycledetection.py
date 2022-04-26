@@ -1,3 +1,11 @@
+"""
+Notes:
+ make sure to rename variables to be more descriptive of what they are and add some comments so future us doesnt get lost
+ finish subcyclegenerator  
+ 
+ """
+
+
 import math
 import numpy as np
 import pandas as pd
@@ -38,7 +46,7 @@ def segmentation(df,clen): #returns segmented data
     na = np.array_split(holder,total)
     return na
 
-def cyclegenerator(file): #runs entire process
+def dynamcyclegenerator(file): #runs entire process
     df = pd.read_csv(rf'raw-data/{file}.csv')
     dfy = pd.DataFrame(df,columns = ['Yvalue']).to_numpy()
     dfy = np.square(dfy)
@@ -57,8 +65,16 @@ def cyclegenerator(file): #runs entire process
     z = minfinder(z)
     return segmentation(df,z)
 
+def manualcyclegenerator(file,len):
+    df = pd.read_csv(rf'raw-data{file}.csv')
+    return segmentation(df,len)
 
 
-
+def subclegenerator(file,timestamps):
+    df = pd.read_csv(rf'raw-data/{file}.csv')
+    times = pd.read_csv(rf'raw-data/{timestamps}.csv')
+    calls = len(times)
+    for i in range 
+    #break dataframe into segments defined in times .csv then calls dynamic cyclegenerator for each one and return all
 
 
