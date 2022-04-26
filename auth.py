@@ -2,24 +2,21 @@ import anomaly
 import feature
 import numpy as np
 import random
+import cycledetection
 
 # Constants
-USERNAME = "rand"
+USERNAME = "user47"
 DATA_POINTS = 200
 VECTOR_SIZE = 3
 NUM_SEGMENTS = 4
 
 # Get data segments from raw data csv.
-
-sample_segments = np.array([[[
-    random.randrange(-10, 10)
-    for _ in range(VECTOR_SIZE)]
-    for _ in range(DATA_POINTS)]
-    for _ in range(NUM_SEGMENTS)]
-)
+segments = cycledetection.cyclegenerator(f"{USERNAME}pocketacc")
+print("Data segmented.")
 
 # Extract features from segments.
-feature.build_training_data(USERNAME, sample_segments)
+feature.build_training_data(USERNAME, segments)
+print("Feature csv built.")
 
 # Get anomaly score from new entry
 new_entry = np.array([random.randrange(-10, 10) for _ in range(36)])
