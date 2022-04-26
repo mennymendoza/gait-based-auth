@@ -131,3 +131,4 @@ dmypy.json
 # Raw Data Files
 raw-data/*.csv
 raw-data/*.txt
+training-data/*.csv
