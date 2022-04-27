@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import os
 import re
+import cycledetection
+import sys
 
 # Constants
 
@@ -90,9 +92,16 @@ def build_feature_batch() -> None:
             f = f[:-4] # removes the .csv part of the file
             print(f)
             # build_training_data(f"{f}", cycledetection.cyclegenerator(f)) 
-            # instead, use gait_instances = np.array(list(map(extract_features, data)))
-            # get 80% of the gait_instances for testing, take 20% for training.
-            # save them both into seperate csvs, one in testing-data, and one in training-data.
+            segments = cycledetection.manualcyclegenerator(f, 300)
+            gait_instances = np.array(list(map(extract_features, segments)))
+            split_index = int(len(gait_instances) * 0.80)
+            training_data = gait_instances[:split_index]
+            column_names = [f"{name}_{dim}" for dim in VECTOR_DIMS for name in FEATURE_NAMES]
+            df_train = pd.DataFrame(training_data, columns=column_names)
+            df_train.to_csv(f"training-data/{f}-training-data.csv", index=False)
+            testing_data = gait_instances[split_index:]
+            df_test = pd.DataFrame(testing_data, columns=column_names)
+            df_test.to_csv(f"testing-data/{f}-testing-data.csv", index=False)
     
     # Go into the testing directory and take all acceleration/gyroscopic data.
     # Mix all testing data into a big dataframe (along with the name of the user)
