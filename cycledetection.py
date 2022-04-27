@@ -64,20 +64,46 @@ def dynamcyclegenerator(file): #runs entire process
     z = np.append(z,handler(reference,Rh))
     z = minfinder(z)
     return segmentation(df,z)
+def dynamcyclegenerator(dataframe): #runs entire process
+    df = dataframe
+    dfy = pd.DataFrame(df,columns = ['Yvalue']).to_numpy()
+    dfy = np.square(dfy)
+    dfy = np.sqrt(dfy)
+    L = len(df.index)
+    C = int(L/2)
+    Start = C - int(N/2)
+    End = C + int(N/2) - 1
+    reference = dfy[Start:End]
+    x = dfy[0:Start - 1]
+    Lh = np.array_split(x,int(len(x)/(N-1)))
+    x = dfy[End+1: L]
+    Rh = np.array_split(x,int(len(x)/(N-1)))
+    z = (handler(reference,Lh))
+    z = np.append(z,handler(reference,Rh))
+    z = minfinder(z)
+    return segmentation(df,z)
 
 def manualcyclegenerator(file,len):
     df = pd.read_csv(rf'raw-data{file}.csv')
     return segmentation(df,len)
 
 
-def subclegenerator(file,timestamps):
+def timecyclegenerator(file,timestamps):
     df = pd.read_csv(rf'raw-data/{file}.csv')
     times = pd.read_csv(rf'raw-data/{timestamps}.csv')
-    calls = len(times)
-    for i in range(calls -1):
-        start = times.iat[i,0]
-        end = times.iat[i+1,0]
-        segment = 
+    frames = []
+    for i in range(0,len(stamps) - 1):
+        start_row = df.loc[df['time'] == times[i]]
+        end_row = df.loc[df['time'] == times[i+1]]
+        startEID = int(start_row['EID'])
+        endEID = int(end_row['EID'])+1
+        timeperiod = df[startEID:endEID]
+        frames = frames.append(timeperiod)
+        i = i + 1
         #need to find where the time section is equal to start and equal to end then submit just that section to dynamic cyclegenerastor
+    df = pd.concat(frames)
+    dynamcyclegenerator(df)
+
+
 
 
