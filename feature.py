@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import os
+import re
 
 # Constants
 
@@ -18,6 +20,7 @@ VECTOR_DIMS = [
     "z",
     "m"
 ]
+USERS = ["1", "47", "48", "49", "50", "51", "52", "83", "84", "85"]
 
 # Functions
 
@@ -68,9 +71,34 @@ def extract_features(data: np.ndarray):
 
 def build_training_data(user: str, data: np.ndarray) -> None:
     gait_instances = np.array(list(map(extract_features, data)))
-    num_segments, num_features = gait_instances.shape
     column_names = [f"{name}_{dim}" for dim in VECTOR_DIMS for name in FEATURE_NAMES]
     df = pd.DataFrame(gait_instances, columns=column_names)
     df.to_csv(f"training-data/{user}-training-data.csv", index=False)
 
+def build_feature_batch() -> None:
+
+    # Grabbing the file names of every file in raw-data
+    all_paths = []
+    for _, _, files in os.walk("./raw-data"):
+        for file in files:
+            all_paths.append(file)
+    
+    # Building training data for each user.
+    for u in USERS:
+        user_data = [path for path in all_paths if re.search(f'^{u}.*\.csv$', path)]
+        for f in user_data:
+            f = f[:-4] # removes the .csv part of the file
+            print(f)
+            # build_training_data(f"{f}", cycledetection.cyclegenerator(f)) 
+            # instead, use gait_instances = np.array(list(map(extract_features, data)))
+            # get 80% of the gait_instances for testing, take 20% for training.
+            # save them both into seperate csvs, one in testing-data, and one in training-data.
+    
+    # Go into the testing directory and take all acceleration/gyroscopic data.
+    # Mix all testing data into a big dataframe (along with the name of the user)
+    # For each user, build a new data frame where THAT user is labeled true and any other user is labelled false.
+
+
 # Testing
+
+build_feature_batch()
