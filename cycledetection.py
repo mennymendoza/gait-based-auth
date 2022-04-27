@@ -74,7 +74,10 @@ def subclegenerator(file,timestamps):
     df = pd.read_csv(rf'raw-data/{file}.csv')
     times = pd.read_csv(rf'raw-data/{timestamps}.csv')
     calls = len(times)
-    for i in range 
-    #break dataframe into segments defined in times .csv then calls dynamic cyclegenerator for each one and return all
+    for i in range(calls -1):
+        start = times.iat[i,0]
+        end = times.iat[i+1,0]
+        segment = 
+        #need to find where the time section is equal to start and equal to end then submit just that section to dynamic cyclegenerastor
 
 
