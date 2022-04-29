@@ -3,6 +3,11 @@ import feature
 import numpy as np
 import random
 import cycledetection
+import sys
+
+feature.build_feature_batch()
+
+sys.exit()
 
 # Constants
 USERNAME = "user47"
