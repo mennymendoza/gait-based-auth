@@ -109,5 +109,3 @@ def build_feature_batch() -> None:
 
 
 # Testing
-
-build_feature_batch()

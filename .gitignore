@@ -133,3 +133,5 @@ raw-data/*.csv
 raw-data/*.txt
 training-data/*.csv
 testing-data/*csv
+
+.vscode/
