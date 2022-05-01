@@ -107,5 +107,27 @@ def build_feature_batch() -> None:
     # Mix all testing data into a big dataframe (along with the name of the user)
     # For each user, build a new data frame where THAT user is labeled true and any other user is labelled false.
 
+def build_testing_file() -> None:
+    # Grabbing the file names of every file in raw-data
+    all_paths = []
+    for _, _, files in os.walk("./testing-data"):
+        for file in files:
+            all_paths.append(file)
+
+    # Grabs only the paths with the word Gyroscope in them
+    gyro_data = [f"./testing-data/{path}" for path in all_paths if re.search('Gyroscope', path)]    
+    
+    # Turns all gyro paths into a list of DataFrames
+    all_gyro_dfs = list(map(lambda p: pd.read_csv(p, header=0), gyro_data))
+    gyro_df = pd.concat(all_gyro_dfs, axis=0) # Combines them into a single df
+    gyro_df.to_csv("./testing-data/all_gyro.csv") # Saves to csv
+
+    # Grabs only the paths with the word Accelerometer in them
+    accel_data = [f"./testing-data/{path}" for path in all_paths if re.search('Accelerometer', path)]
+    
+    # Turns all accel paths into a list of DataFrames
+    all_accel_dfs = list(map(lambda p: pd.read_csv(p, header=0), accel_data))
+    accel_df = pd.concat(all_accel_dfs, axis=0) # Combines them into a single df
+    accel_df.to_csv("./testing-data/all_accel.csv") # Saves to csv
 
 # Testing
