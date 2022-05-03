@@ -5,10 +5,6 @@ import random
 import cycledetection
 import sys
 
-feature.build_feature_batch()
-
-sys.exit()
-
 # Constants
 USERNAME = "user47"
 DATA_POINTS = 200
