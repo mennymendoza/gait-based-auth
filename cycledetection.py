@@ -113,5 +113,5 @@ def graphdisplay():
     plt.axvline(x = int(len(df)/2) + 3000, color = 'r',linewidth = 2)
     plt.axvline(x = int(len(df)/2) - 1000, color = 'r',linewidth = 2)
     plt.axvline(x = int(len(df)/2) - 3000, color = 'r',linewidth = 2)
-
     plt.show()
+
