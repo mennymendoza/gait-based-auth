@@ -22,9 +22,15 @@ VECTOR_DIMS = [
     "z",
     "m"
 ]
-USERS = ["1", "47", "48", "49", "50", "51", "52", "83", "84", "85"]
 
 # Functions
+
+def get_filenames(target_directory: str):
+    all_paths = []
+    for _, _, files in os.walk(target_directory):
+        for file in files:
+            all_paths.append(file)
+    return all_paths
 
 def extract_features(data: np.ndarray):
 
@@ -71,43 +77,30 @@ def extract_features(data: np.ndarray):
 
     return features
 
-def build_training_data(user: str, data: np.ndarray) -> None:
-    gait_instances = np.array(list(map(extract_features, data)))
-    column_names = [f"{name}_{dim}" for dim in VECTOR_DIMS for name in FEATURE_NAMES]
-    df = pd.DataFrame(gait_instances, columns=column_names)
-    df.to_csv(f"training-data/{user}-training-data.csv", index=False)
+# Builds feature datasets for all users in users list
+def build_feature_dataset(segment_size: int, training_split: float=0.8) -> None:
 
-def build_feature_batch() -> None:
+    if not (0 < training_split < 1):
+        print("Error: training_split not between 0 and 1.")
+        return
 
     # Grabbing the file names of every file in raw-data
-    all_paths = []
-    for _, _, files in os.walk("./raw-data"):
-        for file in files:
-            all_paths.append(file)
-    
-    # Building training data for each user.
-    for u in USERS:
-        user_data = [path for path in all_paths if re.search(f'^{u}.*\.csv$', path)]
-        for f in user_data:
-            f = f[:-4] # removes the .csv part of the file
-            print(f)
-            # build_training_data(f"{f}", cycledetection.cyclegenerator(f)) 
-            segments = cycledetection.manualcyclegenerator(f, 300)
-            gait_instances = np.array(list(map(extract_features, segments)))
-            split_index = int(len(gait_instances) * 0.80)
-            training_data = gait_instances[:split_index]
-            column_names = [f"{name}_{dim}" for dim in VECTOR_DIMS for name in FEATURE_NAMES]
-            df_train = pd.DataFrame(training_data, columns=column_names)
-            df_train.to_csv(f"training-data/{f}-training-data.csv", index=False)
-            testing_data = gait_instances[split_index:]
-            df_test = pd.DataFrame(testing_data, columns=column_names)
-            df_test.to_csv(f"testing-data/{f}-testing-data.csv", index=False)
-    
-    # Go into the testing directory and take all acceleration/gyroscopic data.
-    # Mix all testing data into a big dataframe (along with the name of the user)
-    # For each user, build a new data frame where THAT user is labeled true and any other user is labelled false.
+    all_paths = [path for path in get_filenames("./raw-data") if re.search("^[0-9]*_", path)]
+    for path in all_paths:
+        path = path[:-4] # removes the .csv part of the file
+        print(path)
+        segments = cycledetection.manualcyclegenerator(path, segment_size)
+        gait_instances = np.array(list(map(extract_features, segments)))
+        split_index = int(len(gait_instances) * training_split)
+        training_data = gait_instances[:split_index]
+        column_names = [f"{name}_{dim}" for dim in VECTOR_DIMS for name in FEATURE_NAMES]
+        df_train = pd.DataFrame(training_data, columns=column_names)
+        df_train.to_csv(f"training-data/{path}-training-data.csv", index=False)
+        testing_data = gait_instances[split_index:]
+        df_test = pd.DataFrame(testing_data, columns=column_names)
+        df_test.to_csv(f"testing-data/{path}-testing-data.csv", index=False)
 
-def df_build(path: str, user: str) -> None:
+def df_build(path: str, user: str) -> pd.DataFrame:
     df = pd.read_csv(f"./testing-data/{path}", header=0)
     user_df = re.search("^[0-9]*_", path).group().replace("_", "")
     df["user"] = [user_df for _ in range(df.shape[0])]
@@ -117,36 +110,28 @@ def df_build(path: str, user: str) -> None:
         df["label"] = np.zeros(df.shape[0])
     return df
 
-def build_testing_file(users: list) -> None:
+# Wraps all data in testing labelled 1 for target user and 0 for not target user.
+def build_label_file(target_user: str) -> None:
     
-    if len(users) < 2:
-        print("Not enough users to create a testing dataset.")
+    if not isinstance(target_user, str):
+        print("Target user should be string.")
         return
 
-    # Grabbing the file names of every file in raw-data
-    all_paths = []
-    for _, _, files in os.walk("./testing-data"):
-        for file in files:
-            all_paths.append(file)
-
-    first_user = users[0]
+    # Grabbing the file names of every file in testing-data
+    all_paths = get_filenames("./testing-data")
 
     # Grabs only the paths with the word Gyroscope in them
     gyro_data = [path for path in all_paths if re.search('Gyroscope', path)]
     
     # Turns all gyro paths into a list of DataFrames
-    all_gyro_dfs = list(map(lambda p: df_build(p, first_user), gyro_data))
+    all_gyro_dfs = list(map(lambda p: df_build(p, target_user), gyro_data))
     gyro_df = pd.concat(all_gyro_dfs, axis=0) # Combines them into a single df
-    gyro_df.to_csv("./testing-data/all_gyro.csv") # Saves to csv
+    gyro_df.to_csv(f"./testing-data/all_gyro_user_{target_user}.csv") # Saves to csv
 
     # Grabs only the paths with the word Accelerometer in them
     accel_data = [path for path in all_paths if re.search('Accelerometer', path)]
     
     # Turns all accel paths into a list of DataFrames
-    all_accel_dfs = list(map(lambda p: df_build(p, first_user), accel_data))
+    all_accel_dfs = list(map(lambda p: df_build(p, target_user), accel_data))
     accel_df = pd.concat(all_accel_dfs, axis=0) # Combines them into a single df
-    accel_df.to_csv("./testing-data/all_accel.csv") # Saves to csv
-
-# Testing
-
-build_testing_file(USERS)
+    accel_df.to_csv(f"./testing-data/all_accel_user_{target_user}.csv") # Saves to csv
