@@ -7,8 +7,8 @@ def givedems(dems,dems_csv):
     df = pd.read_csv(rf'raw-data/{dems_csv}.csv')
     df = pd.DataFrame(df,columns =dems )
     for i in range (1,len(dems)-1):
-        ages = df.groupby(dems[i])
-        print(ages.groups)
+        demholder = df.groupby(dems[i])
+        print(demholder.groups)
 
 
 loc = "Demographics"
