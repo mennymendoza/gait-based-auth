@@ -82,7 +82,7 @@ def dynamcyclegenerator(dataframe): #runs entire process - only exists for polym
     return segmentation(df,z)
 
 def manualcyclegenerator(file,len): #generates cycle manually ignoring n value based on a predetermined user given cycle length
-    df = pd.read_csv(rf'raw-data{file}.csv')
+    df = pd.read_csv(rf'raw-data/{file}.csv')
     return segmentation(df,len)
 
 
