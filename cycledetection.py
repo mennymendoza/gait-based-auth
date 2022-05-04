@@ -103,11 +103,15 @@ def timecyclegenerator(file,timestamps): #generates cycles given specific interv
     df = pd.concat(frames)
     dynamcyclegeneratorwtime(df)
 
-def anim():
+def graphdisplay():
     df = pd.read_csv(rf'raw-data/47_pocket_acc.csv')
     df = pd.DataFrame(df,columns = ['Yvalue'])
     df = np.sqrt(np.square(df))
     df.plot()
-    for i in range (0, int(len(df)/2000)):
-        plt.axvline(x = i*2000,color = 'r')
+    plt.axvline(x = int(len(df)/2), color = 'g', linewidth = 2)
+    plt.axvline(x = int(len(df)/2) + 1000, color = 'r',linewidth = 2)
+    plt.axvline(x = int(len(df)/2) + 3000, color = 'r',linewidth = 2)
+    plt.axvline(x = int(len(df)/2) - 1000, color = 'r',linewidth = 2)
+    plt.axvline(x = int(len(df)/2) - 3000, color = 'r',linewidth = 2)
+
     plt.show()
