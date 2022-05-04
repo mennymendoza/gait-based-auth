@@ -12,7 +12,7 @@
 
 ### Feature Module
 
-There are two important functions in the feature.py script. The first is `build_feature_dataset`. All it does is look for files in the `raw-data` directory and extracts the features from any raw data file that has the users from the users list at the front. This feature data is split up and appropriately placed into the `training-data` directory and the `testing-data` directory.
+There are two important functions in the feature.py script. The first is `build_feature_dataset`. All it does is look for files in the `raw-data` directory and extracts the features from any raw data file. This feature data is split up and appropriately placed into the `training-data` directory and the `testing-data` directory.
 
 Parameters:
 The only required parameter is a segment size. This will determine how large the segments will be when the raw data is segmented and summarized. There's an optional parameter `training_split` which must be a float between 0 and 1; this determines the ratio of the data that will go to training. The remaining data will go to testing.
