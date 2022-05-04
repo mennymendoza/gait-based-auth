@@ -7,8 +7,9 @@ import math
 import numpy as np
 import pandas as pd
 from scipy import stats
+import matplotlib.pyplot as plt
 #Constants
-N = 100 #defines cycle range to search during dynamic cycle detection
+N = 1000 #defines cycle range to search during dynamic cycle detection
 
 def distance(y1,y2):
     d = np.sqrt((y2-y1)**2)
@@ -61,7 +62,8 @@ def dynamcyclegenerator(file): #finds magnitude of y value in order for best acc
     z = np.append(z,handler(reference,Rh))
     z = minfinder(z)
     return segmentation(df,z)
-def dynamcyclegenerator(dataframe): #runs entire process - only exists for polymorphism to be used with timecyclegenerator
+
+def dynamcyclegeneratorwtime(dataframe): #runs entire process - only exists  to be used with timecyclegenerator
     df = dataframe
     dfy = pd.DataFrame(df,columns = ['Yvalue']).to_numpy()
     dfy = np.square(dfy)
@@ -79,6 +81,7 @@ def dynamcyclegenerator(dataframe): #runs entire process - only exists for polym
     z = np.append(z,handler(reference,Rh))
     z = minfinder(z)
     return segmentation(df,z)
+
 
 def manualcyclegenerator(file,len): #generates cycle manually ignoring n value based on a predetermined user given cycle length
     df = pd.read_csv(rf'raw-data/{file}.csv')
@@ -98,7 +101,13 @@ def timecyclegenerator(file,timestamps): #generates cycles given specific interv
         frames = frames.append(timeperiod)
         i = i + 1
     df = pd.concat(frames)
-    dynamcyclegenerator(df)
+    dynamcyclegeneratorwtime(df)
 
-
-
+def anim():
+    df = pd.read_csv(rf'raw-data/47_pocket_acc.csv')
+    df = pd.DataFrame(df,columns = ['Yvalue'])
+    df = np.sqrt(np.square(df))
+    df.plot()
+    for i in range (0, int(len(df)/2000)):
+        plt.axvline(x = i*2000,color = 'r')
+    plt.show()
