@@ -2,7 +2,6 @@
 Dynamic cycle generation for gait based auth functions via selecting the midpoint of the data range then creating a range "N" around it. The data is then compared in equal length segments, finding the points with 
 the lowest distances between them at any 2 corresponding indexes. Those distances and indexes are then logged accordingly and the mode is found in order to produce a most common cycle length
 Should the mode produce a NAN the average is instead used
-
 """
 import math
 import numpy as np
@@ -100,7 +99,6 @@ def timecyclegenerator(file,timestamps): #generates cycles given specific interv
         i = i + 1
     df = pd.concat(frames)
     dynamcyclegenerator(df)
-
 
 
 
