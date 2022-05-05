@@ -9,7 +9,7 @@ import pandas as pd
     to the orignal value, we are looking for a better ratio. This process will be repeated until an ideal ratio is reached
 """
 
-
+#float exists from -inf to +inf
 
 def authentification(user,tolerance):
     #run auth process   
