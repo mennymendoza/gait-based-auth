@@ -126,7 +126,7 @@ def build_label_file(target_user: str) -> None:
     # Turns all gyro paths into a list of DataFrames
     all_gyro_dfs = list(map(lambda p: df_build(p, target_user), gyro_data))
     gyro_df = pd.concat(all_gyro_dfs, axis=0) # Combines them into a single df
-    gyro_df.to_csv(f"./testing-data/all_gyro_user_{target_user}.csv") # Saves to csv
+    gyro_df.to_csv(f"./labelled-data/{target_user}-gyro-labelled-data.csv") # Saves to csv
 
     # Grabs only the paths with the word Accelerometer in them
     accel_data = [path for path in all_paths if re.search('Accelerometer', path)]
@@ -134,4 +134,15 @@ def build_label_file(target_user: str) -> None:
     # Turns all accel paths into a list of DataFrames
     all_accel_dfs = list(map(lambda p: df_build(p, target_user), accel_data))
     accel_df = pd.concat(all_accel_dfs, axis=0) # Combines them into a single df
-    accel_df.to_csv(f"./testing-data/all_accel_user_{target_user}.csv") # Saves to csv
+    accel_df.to_csv(f"./labelled-data/{target_user}-accel-labelled-data.csv") # Saves to csv
+
+def build_corr_dataset() -> None:
+    all_paths = get_filenames("./labelled-data")
+    for path in all_paths:
+        print(path)
+        df = pd.read_csv(f"./labelled-data/{path}", header=0)
+        path = path[:-4]
+        for feat in FEATURE_NAMES:
+            paired_df = df[[feat, "label"]]
+            corr_df = paired_df.corr()
+            corr_df.to_csv(f"./analysis-data/{path}-correlation.csv")
