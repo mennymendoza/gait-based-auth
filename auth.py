@@ -1,4 +1,3 @@
-import anomaly
 import feature
 import numpy as np
 import random
@@ -22,6 +21,6 @@ print("Feature csv built.")
 # Get anomaly score from new entry
 new_entry = np.array([random.randrange(-10, 10) for _ in range(36)])
 print("Entry:", new_entry)
-as_score = anomaly.get_anomaly_score(new_entry, f"training-data/{USERNAME}-training-data.csv")
+as_score = feature.get_anomaly_score(new_entry, f"training-data/{USERNAME}-training-data.csv")
 print("Anomaly Score:", as_score)
 
