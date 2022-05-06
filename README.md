@@ -8,11 +8,11 @@
 3. Extract the relevant features from the extracted vectors.
 4. Features are then used to distinguish between authorized and unauthorized user using semi-supervised anomaly detection. Essentially, we find the nearest neighbor to a new user and calculate the Euclidean distance between them. This distance is then normalized on the distances of all training examples and used to generate an anomaly score. This score is then used to classify the new user. The threshold is determined by minimizing false positives. 
 
-## Documentation
+# Documentation
 
-### Feature Module
+## Feature Module
 
-#### `get_anomaly_score`
+### `get_anomaly_score`
 
 This function simply gets the anomaly score of a single row of features.
 
@@ -38,7 +38,7 @@ training_path = "./training-data/path/to/file"
 print(feature.get_anomaly_score(first_row, training_path))
 ```
 
-#### `build_feature_dataset`
+### `build_feature_dataset`
 
 Another important function in the `feature.py` module is the `build_feature_dataset`. All it does is look for files in the `raw-data` directory and extracts the features from any raw data file. This feature data is split up and appropriately placed into the `training-data` directory and the `testing-data` directory.
 
@@ -51,7 +51,7 @@ import feature
 feature.build_feature_dataset(300) # This will have a segment size of 300.
 ```
 
-#### `build_label_file`
+### `build_label_file`
 
 The other important function is `build_label_file`. This function simply appends all of the data in `testing-data` into one single dataframe and then labels the rows as 1 if they belongs to the `target_user` and 0 if the rows do not belong to the `target_user`. Another column containing the user names is also added for convenience.
 
