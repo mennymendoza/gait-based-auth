@@ -133,6 +133,7 @@ raw-data/*.csv
 raw-data/*.txt
 training-data/*.csv
 testing-data/*.csv
-labelled-data/*.csv
+labeled-data/*.csv
+analysis-data/*.csv
 
 .vscode/
