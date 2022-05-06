@@ -22,6 +22,7 @@ VECTOR_DIMS = [
     "z",
     "m"
 ]
+COLUMN_NAMES = [f"{name}_{dim}" for dim in VECTOR_DIMS for name in FEATURE_NAMES]
 
 # Functions
 
@@ -131,11 +132,10 @@ def build_feature_dataset(segment_size: int, training_split: float=0.8) -> None:
         gait_instances = np.array(list(map(extract_features, segments)))
         split_index = int(len(gait_instances) * training_split)
         training_data = gait_instances[:split_index]
-        column_names = [f"{name}_{dim}" for dim in VECTOR_DIMS for name in FEATURE_NAMES]
-        df_train = pd.DataFrame(training_data, columns=column_names)
+        df_train = pd.DataFrame(training_data, columns=COLUMN_NAMES)
         df_train.to_csv(f"training-data/{path}-training-data.csv", index=False)
         testing_data = gait_instances[split_index:]
-        df_test = pd.DataFrame(testing_data, columns=column_names)
+        df_test = pd.DataFrame(testing_data, columns=COLUMN_NAMES)
         df_test.to_csv(f"testing-data/{path}-testing-data.csv", index=False)
 
 def df_build(path: str, user: str) -> pd.DataFrame:
@@ -174,13 +174,19 @@ def build_label_file(target_user: str) -> None:
     accel_df = pd.concat(all_accel_dfs, axis=0) # Combines them into a single df
     accel_df.to_csv(f"./labelled-data/{target_user}-accel-labelled-data.csv") # Saves to csv
 
+# Gets all csvs in labelled-data directory and saves corresponding correlation data into analysis-data
 def build_corr_dataset() -> None:
-    all_paths = get_filenames("./labelled-data")
+    all_paths = [path for path in get_filenames("./labelled-data") if re.search("^[0-9]*-", path)]
+
     for path in all_paths:
         print(path)
         df = pd.read_csv(f"./labelled-data/{path}", header=0)
         path = path[:-4]
-        for feat in FEATURE_NAMES:
+        corr_stats = []
+        for feat in COLUMN_NAMES:
             paired_df = df[[feat, "label"]]
-            corr_df = paired_df.corr()
-            corr_df.to_csv(f"./analysis-data/{path}-correlation.csv")
+            corr_coef = paired_df.corr().to_numpy()[0][1]
+            percentage = abs(corr_coef) * 100
+            corr_stats.append((feat, corr_coef, percentage))
+        df_corr = pd.DataFrame(corr_stats, columns=["feature", "correlation", "%"])
+        df_corr.to_csv(f"./analysis-data/{path}-correlation.csv")

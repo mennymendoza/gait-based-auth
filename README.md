@@ -64,3 +64,18 @@ import feature
 feature.build_feature_dataset(300)
 feature.build_label_file("1")
 ```
+
+### `build_corr_dataset`
+
+This nifty function simply grabs all the data in the labelled-data directory and finds the correlation between each feature column and the `label` column.
+
+Params: No params. Poggers.
+
+Here's an example of the use of this function.
+
+```python
+import feature
+feature.build_feature_dataset(300)
+feature.build_label_file("1")
+feature.build_corr_dataset()
+```
