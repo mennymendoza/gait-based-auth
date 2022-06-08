@@ -3,7 +3,9 @@
 
 ### Usage
 Place data in raw-data
+
 Build dataset
+
 call authenticator function with training-data path, test-path for same user, and then test-path for user to be auth'd
 
 # Documentation
