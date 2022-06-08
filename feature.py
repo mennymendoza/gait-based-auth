@@ -15,7 +15,7 @@ FEATURE_NAMES = ["iqr",
         "mean",
         "min",
         "rms",
-        "std"]
+        "std",]
 VECTOR_DIMS = [
     "x",
     "y",
