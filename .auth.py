@@ -40,7 +40,7 @@ def authenticator(training_path,ditto_path,test_path) -> bool:
     
 
 
-training = rf"./training-data/1_PocketPhone_Accelerometer_(Samsung_S6) -training-data.csv"
-dittotest = rf"./testing-data/1_PocketPhone_Accelerometer_(Samsung_S6) -testing-data.csv"
-test = rf"./testing-data/52_PocketPhone_Accelerometer_(Samsung_S6)-testing-data.csv"
+training = rf"./analysis-data/training-data/1_PocketPhone_Accelerometer_(Samsung_S6) -training-data.csv"
+dittotest = rf"./analysis-data/testing-data/1_PocketPhone_Accelerometer_(Samsung_S6) -testing-data.csv"
+test = rf"./analysis-data/testing-data/1_PocketPhone_Accelerometer_(Samsung_S6) -testing-data.csv"
 print(authenticator(training,dittotest,test))
