@@ -217,6 +217,7 @@ def authenticator(training_path,ditto_path,test_path) -> bool:
         row = df.iloc[which_row].to_numpy()
         anomscores[which_row] = get_anomaly_score(row,training_path)
     average_score = np.average(anomscores)
+    print("average anomaly score = " + str(average_score))
     stdev = stdevgetter(training_path,ditto_path)
     stdev = stdev * 2.0
     if (average_score > stdev) or (average_score < (stdev*-1.0)): return 0
