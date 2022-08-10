@@ -2,7 +2,7 @@
 # gait-based-auth
 
 ### Usage
-Place data in raw-data
+Place data in raw-data in form of .csv file
 
 Build dataset
 
