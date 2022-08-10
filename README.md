@@ -69,7 +69,7 @@ feature.build_label_file("1")
 
 This nifty function simply grabs all the data in the labelled-data directory and finds the correlation between each feature column and the `label` column.
 
-Params: No params. Poggers.
+Params: No params.
 
 Here's an example of the use of this function.
 
